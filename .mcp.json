@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "higgsfield": {
+      "type": "sse",
+      "url": "https://mcp.higgsfield.ai/mcp"
+    },
+    "facebook-ads": {
+      "type": "http",
+      "url": "https://mcp.facebook.com/ads"
+    }
+  }
+}
