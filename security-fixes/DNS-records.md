@@ -2,58 +2,52 @@
 
 Ve a **dash.cloudflare.com → casavillar.site → DNS → Records → Add record**
 
----
-
-## 1. SPF — evita suplantación de correo
-
-| Campo  | Valor |
-|--------|-------|
-| Type   | TXT |
-| Name   | `@` |
-| Content | `v=spf1 include:_spf.google.com ~all` |
-| TTL    | Auto |
-| Proxy  | **DNS only** (nube gris, NO proxied) |
-
-> Si usas otro proveedor de correo reemplaza `include:_spf.google.com`:
-> - Zoho: `include:zoho.com`
-> - Microsoft 365: `include:spf.protection.outlook.com`
-> - Otro: consulta la documentación de tu proveedor
+> Nota: usas Gmail personal — no envías correos desde @casavillar.site.
+> La configuración bloquea CUALQUIER envío desde ese dominio, lo que es
+> la opción más segura y elimina completamente el riesgo de suplantación.
 
 ---
 
-## 2. DMARC — qué hacer con correos falsos
+## 1. SPF — bloquea todo envío desde casavillar.site
 
-| Campo  | Valor |
-|--------|-------|
-| Type   | TXT |
-| Name   | `_dmarc` |
-| Content | `v=DMARC1; p=quarantine; rua=mailto:dmarc@casavillar.site; pct=100` |
-| TTL    | Auto |
-| Proxy  | **DNS only** (nube gris) |
+| Campo   | Valor |
+|---------|-------|
+| Type    | TXT |
+| Name    | `@` |
+| Content | `v=spf1 -all` |
+| TTL     | Auto |
+| Proxy   | **DNS only** (nube gris, NO proxied) |
 
-> `p=quarantine` manda los correos falsos al spam de tus clientes.
-> Cuando confirmes que tu correo legítimo llega bien, cambia a `p=reject`.
+> `-all` significa "ningún servidor está autorizado a enviar correos
+> desde casavillar.site". Cualquier intento de suplantación falla directo.
 
 ---
 
-## 3. DKIM — firma criptográfica (configura desde tu proveedor de correo)
+## 2. DMARC — rechaza y reporta los correos falsos
 
-DKIM se activa en el panel de tu proveedor de correo, que te genera el registro:
+| Campo   | Valor |
+|---------|-------|
+| Type    | TXT |
+| Name    | `_dmarc` |
+| Content | `v=DMARC1; p=reject; rua=mailto:casa.villarmp@gmail.com` |
+| TTL     | Auto |
+| Proxy   | **DNS only** (nube gris) |
 
-- **Google Workspace**: Admin console → Apps → Google Workspace → Gmail → Authenticate email
-- **Microsoft 365**: Admin center → Exchange → Protection → DKIM
-- **Zoho Mail**: Settings → Email Domains → SPF/DKIM Authentication
+> `p=reject` hace que los servidores de correo descarten directamente
+> cualquier email que finja venir de @casavillar.site.
+> Los reportes de intentos de fraude llegarán a tu Gmail.
 
-El panel te dará un registro TXT tipo:
-```
-Name:    google._domainkey
-Content: v=DKIM1; k=rsa; p=MIIBIjAN...
-```
-Agrégalo en Cloudflare DNS con **Proxy: DNS only**.
+---
+
+## 3. DKIM — no aplica en tu caso
+
+DKIM requiere Google Workspace (de pago). Como no envías correos desde
+@casavillar.site, no necesitas DKIM. Con SPF `-all` y DMARC `p=reject`
+el dominio queda completamente protegido contra suplantación.
 
 ---
 
 ## Verificar (espera 5-10 min después de guardar)
 
-- SPF + DMARC: https://mxtoolbox.com/SuperTool.aspx
-- DKIM: https://mxtoolbox.com/dkim.aspx
+Entra a https://mxtoolbox.com/SuperTool.aspx y escribe `casavillar.site`
+para confirmar que SPF y DMARC están activos.
