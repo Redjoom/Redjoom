@@ -1,52 +1,59 @@
-# Registros DNS requeridos para casavillar.site
+# Registros DNS para casavillar.site (Cloudflare)
 
-Agrega estos 2 registros TXT en el panel de tu proveedor de DNS
-(Namecheap, GoDaddy, Cloudflare, etc.)
-
----
-
-## 1. SPF — evita que otros envíen correos suplantando tu dominio
-
-| Campo | Valor |
-|-------|-------|
-| Tipo  | TXT |
-| Nombre / Host | `@` (o `casavillar.site.`) |
-| Valor | `v=spf1 include:_spf.google.com ~all` |
-| TTL   | 3600 |
-
-> Si usas otro proveedor de correo (Zoho, Outlook, etc.), reemplaza
-> `include:_spf.google.com` con el valor que te indique tu proveedor.
+Ve a **dash.cloudflare.com → casavillar.site → DNS → Records → Add record**
 
 ---
 
-## 2. DMARC — define qué hacer con los correos falsos
+## 1. SPF — evita suplantación de correo
 
-| Campo | Valor |
-|-------|-------|
-| Tipo  | TXT |
-| Nombre / Host | `_dmarc` (resulta en `_dmarc.casavillar.site`) |
-| Valor | `v=DMARC1; p=quarantine; rua=mailto:dmarc@casavillar.site; pct=100` |
-| TTL   | 3600 |
+| Campo  | Valor |
+|--------|-------|
+| Type   | TXT |
+| Name   | `@` |
+| Content | `v=spf1 include:_spf.google.com ~all` |
+| TTL    | Auto |
+| Proxy  | **DNS only** (nube gris, NO proxied) |
 
-> `p=quarantine` manda al spam los correos falsos.
-> Cambia a `p=reject` cuando estés seguro de que tu correo legítimo funciona.
-
----
-
-## 3. DKIM — firma criptográfica de tus correos (configura en tu proveedor de correo)
-
-DKIM se configura desde el panel de tu proveedor de correo, no desde DNS directamente:
-
-- **Google Workspace**: Admin > Apps > Google Workspace > Gmail > Autenticar correo electrónico
-- **Microsoft 365**: Centro de administración > Exchange > Protección > DKIM
-- **Zoho Mail**: Configuración > Dominios de correo > Autenticación SPF/DKIM
-
-El panel te generará el registro TXT que debes agregar a tu DNS.
+> Si usas otro proveedor de correo reemplaza `include:_spf.google.com`:
+> - Zoho: `include:zoho.com`
+> - Microsoft 365: `include:spf.protection.outlook.com`
+> - Otro: consulta la documentación de tu proveedor
 
 ---
 
-## Verificar que funciona (después de 24-48h)
+## 2. DMARC — qué hacer con correos falsos
 
-Puedes verificar tus registros en:
+| Campo  | Valor |
+|--------|-------|
+| Type   | TXT |
+| Name   | `_dmarc` |
+| Content | `v=DMARC1; p=quarantine; rua=mailto:dmarc@casavillar.site; pct=100` |
+| TTL    | Auto |
+| Proxy  | **DNS only** (nube gris) |
+
+> `p=quarantine` manda los correos falsos al spam de tus clientes.
+> Cuando confirmes que tu correo legítimo llega bien, cambia a `p=reject`.
+
+---
+
+## 3. DKIM — firma criptográfica (configura desde tu proveedor de correo)
+
+DKIM se activa en el panel de tu proveedor de correo, que te genera el registro:
+
+- **Google Workspace**: Admin console → Apps → Google Workspace → Gmail → Authenticate email
+- **Microsoft 365**: Admin center → Exchange → Protection → DKIM
+- **Zoho Mail**: Settings → Email Domains → SPF/DKIM Authentication
+
+El panel te dará un registro TXT tipo:
+```
+Name:    google._domainkey
+Content: v=DKIM1; k=rsa; p=MIIBIjAN...
+```
+Agrégalo en Cloudflare DNS con **Proxy: DNS only**.
+
+---
+
+## Verificar (espera 5-10 min después de guardar)
+
 - SPF + DMARC: https://mxtoolbox.com/SuperTool.aspx
 - DKIM: https://mxtoolbox.com/dkim.aspx
