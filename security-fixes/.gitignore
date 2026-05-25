@@ -1,0 +1,17 @@
+# Archivos que NUNCA deben estar en el repositorio ni en el deploy
+.env
+.env.*
+.env.local
+.env.production
+
+# Backups — si los generas, ponlos fuera del directorio del sitio
+*.sql
+*.bak
+backup.zip
+database.zip
+
+# Archivos de sistema macOS
+.DS_Store
+
+# Git (ya lo ignora git, pero es buena práctica para otros deploys)
+.git/

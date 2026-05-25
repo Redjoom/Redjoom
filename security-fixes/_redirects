@@ -1,0 +1,22 @@
+# Bloquea archivos sensibles — Cloudflare Pages devuelve 404
+/.env                   /404          404
+/.env.*                 /404          404
+/.git                   /404          404
+/.git/*                 /404          404
+/.htaccess              /404          404
+/.DS_Store              /404          404
+/wp-admin               /404          404
+/wp-admin/*             /404          404
+/wp-login.php           /404          404
+/phpmyadmin             /404          404
+/phpmyadmin/*           /404          404
+/phpinfo.php            /404          404
+/config.php             /404          404
+/backup.zip             /404          404
+/backup.sql             /404          404
+/database.sql           /404          404
+/server-status          /404          404
+/*.sql                  /404          404
+/*.zip                  /404          404
+/*.bak                  /404          404
+/*.log                  /404          404
