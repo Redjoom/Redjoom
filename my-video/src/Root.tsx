@@ -3,6 +3,7 @@ import { Composition } from "remotion";
 import { HelloWorld, myCompSchema } from "./HelloWorld";
 import { Logo, myCompSchema2 } from "./HelloWorld/Logo";
 import { BirdVideo } from "./BirdVideo";
+import { WhatsAppBarberia, TOTAL_FRAMES } from "./WhatsAppBarberia";
 
 // Each <Composition> is an entry in the sidebar!
 
@@ -27,6 +28,15 @@ export const RemotionRoot: React.FC = () => {
           logoColor1: "#91EAE4",
           logoColor2: "#86A8E7",
         }}
+      />
+
+      <Composition
+        id="WhatsAppBarberia"
+        component={WhatsAppBarberia}
+        durationInFrames={TOTAL_FRAMES}
+        fps={30}
+        width={1080}
+        height={1920}
       />
 
       <Composition
