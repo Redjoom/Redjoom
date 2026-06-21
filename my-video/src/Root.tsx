@@ -2,6 +2,14 @@ import "./index.css";
 import { Composition } from "remotion";
 import { HelloWorld, myCompSchema } from "./HelloWorld";
 import { Logo, myCompSchema2 } from "./HelloWorld/Logo";
+import {
+  DesgraciaCafetera,
+  desgraciaCafeteraSchema,
+  VIDEO_DURATION_IN_FRAMES,
+  VIDEO_FPS,
+  VIDEO_WIDTH,
+  VIDEO_HEIGHT,
+} from "./DesgraciaCafetera";
 
 // Each <Composition> is an entry in the sidebar!
 
@@ -41,6 +49,17 @@ export const RemotionRoot: React.FC = () => {
           logoColor1: "#91dAE2" as const,
           logoColor2: "#86A8E7" as const,
         }}
+      />
+
+      <Composition
+        id="DesgraciaCafetera"
+        component={DesgraciaCafetera}
+        durationInFrames={VIDEO_DURATION_IN_FRAMES}
+        fps={VIDEO_FPS}
+        width={VIDEO_WIDTH}
+        height={VIDEO_HEIGHT}
+        schema={desgraciaCafeteraSchema}
+        defaultProps={{}}
       />
     </>
   );
